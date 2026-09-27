@@ -1,0 +1,11 @@
+date,category,feedback,cleaned_text,sentiment,polarity,subjectivity
+2026-01-05,Electronics,The sound quality is excellent and I am very happy.,sound quality excellent happy,Positive,0.7999999999999999,0.7999999999999999
+2026-01-07,Electronics,Battery backup is very poor and disappointing.,battery backup poor disappointing,Negative,-0.56,0.74
+2026-01-10,Fashion,The product quality is good and delivery was fast.,product quality good delivery fast,Positive,0.44999999999999996,0.6000000000000001
+2026-01-12,Electronics,The headphones are comfortable and the sound is amazing.,headphones comfortable sound amazing,Positive,0.46666666666666673,0.7000000000000001
+2026-01-15,Fashion,The size is not correct and the material is disappointing.,size not correct material disappointing,Negative,-0.6,0.7
+2026-01-18,Home,The product is useful and easy to use.,product useful easy use,Positive,0.3666666666666667,0.4166666666666667
+2026-01-20,Electronics,The battery performance is excellent.,battery performance excellent,Positive,1.0,1.0
+2026-01-23,Home,The delivery was late but the product quality is good.,delivery late product quality good,Positive,0.19999999999999998,0.6000000000000001
+2026-01-25,Fashion,The design is beautiful and the quality is excellent.,design beautiful quality excellent,Positive,0.925,1.0
+2026-01-28,Electronics,The device gets heated quickly and I am disappointed.,device gets heated quickly disappointed,Negative,-0.20833333333333334,0.625

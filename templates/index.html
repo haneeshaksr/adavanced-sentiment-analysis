@@ -1,0 +1,678 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Advanced Sentiment Analysis & Trend Mining</title>
+
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background: #f4f7fb;
+            color: #222;
+        }
+
+        header {
+            background: linear-gradient(135deg, #172554, #2563eb);
+            color: white;
+            padding: 35px 20px;
+            text-align: center;
+        }
+
+        header h1 {
+            font-size: 32px;
+            margin-bottom: 10px;
+        }
+
+        header p {
+            font-size: 17px;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            margin: 30px auto;
+        }
+
+        .intro {
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            margin-bottom: 25px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+        }
+
+        .intro h2 {
+            color: #1d4ed8;
+            margin-bottom: 12px;
+        }
+
+        .example {
+            background: #eff6ff;
+            padding: 20px;
+            border-left: 5px solid #2563eb;
+            border-radius: 10px;
+            margin-top: 15px;
+        }
+
+        .analyzer {
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+            margin-bottom: 30px;
+        }
+
+        .analyzer h2 {
+            color: #1d4ed8;
+            margin-bottom: 15px;
+        }
+
+        textarea {
+            width: 100%;
+            height: 120px;
+            padding: 15px;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            resize: vertical;
+            font-size: 16px;
+        }
+
+        button {
+            margin-top: 15px;
+            padding: 12px 25px;
+            border: none;
+            border-radius: 8px;
+            background: #2563eb;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #1d4ed8;
+        }
+
+        #result {
+            margin-top: 20px;
+            padding: 20px;
+            background: #f8fafc;
+            border-radius: 10px;
+            display: none;
+        }
+
+        .result-item {
+            margin: 8px 0;
+        }
+
+        .cards {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .card {
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            text-align: center;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+        }
+
+        .card h3 {
+            color: #555;
+            margin-bottom: 10px;
+        }
+
+        .card p {
+            font-size: 32px;
+            font-weight: bold;
+            color: #2563eb;
+        }
+
+        .charts {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 25px;
+        }
+
+        .chart-box {
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+        }
+
+        .chart-box h2 {
+            color: #1d4ed8;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        footer {
+            margin-top: 40px;
+            background: #172554;
+            color: white;
+            text-align: center;
+            padding: 20px;
+        }
+
+        @media (max-width: 800px) {
+            .cards {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .charts {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 500px) {
+            .cards {
+                grid-template-columns: 1fr;
+            }
+
+            header h1 {
+                font-size: 24px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<header>
+    <h1>Advanced Sentiment Analysis & Trend Mining System</h1>
+    <p>Analyze customer feedback, discover sentiment and identify important trends</p>
+</header>
+
+<div class="container">
+
+    <!-- INTRODUCTION -->
+    <section class="intro">
+        <h2>📊 About the Project</h2>
+
+        <p>
+            This system uses Natural Language Processing to analyze textual
+            feedback and classify it into Positive, Negative, or Neutral
+            sentiment. It also identifies frequent words and sentiment trends.
+        </p>
+
+        <div class="example">
+            <h3>🛒 Real-World Example: Wireless Earphones</h3>
+
+            <p>
+                <b>Rating:</b> ⭐ 3.9 / 5
+            </p>
+
+            <p>
+                <b>Review:</b>
+                "Sound quality is excellent and I am very happy."
+            </p>
+
+            <p>
+                <b>System Result:</b> Positive
+            </p>
+
+            <br>
+
+            <p>
+                A numerical rating tells us <b>what</b> rating the customer
+                gave, while sentiment analysis helps understand
+                <b>why</b> the customer feels that way.
+            </p>
+        </div>
+    </section>
+
+
+    <!-- REVIEW ANALYZER -->
+    <section class="analyzer">
+
+        <h2>🔍 Review Sentiment Analyzer</h2>
+
+        <p>Enter a customer review below:</p>
+
+        <br>
+
+        <textarea
+            id="reviewText"
+            placeholder="Example: The product quality is excellent and delivery was fast."
+        ></textarea>
+
+        <button onclick="analyzeReview()">
+            Analyze Review
+        </button>
+
+        <div id="result">
+
+            <h3>Analysis Result</h3>
+
+            <p class="result-item">
+                <b>Original Text:</b>
+                <span id="originalText"></span>
+            </p>
+
+            <p class="result-item">
+                <b>Cleaned Text:</b>
+                <span id="cleanedText"></span>
+            </p>
+
+            <p class="result-item">
+                <b>Sentiment:</b>
+                <span id="sentiment"></span>
+            </p>
+
+            <p class="result-item">
+                <b>Polarity:</b>
+                <span id="polarity"></span>
+            </p>
+
+            <p class="result-item">
+                <b>Subjectivity:</b>
+                <span id="subjectivity"></span>
+            </p>
+
+        </div>
+
+    </section>
+
+
+    <!-- DASHBOARD CARDS -->
+    <h2 style="margin-bottom: 15px;">📈 Sentiment Dashboard</h2>
+
+    <div class="cards">
+
+        <div class="card">
+            <h3>Total Reviews</h3>
+            <p id="total">0</p>
+        </div>
+
+        <div class="card">
+            <h3>Positive</h3>
+            <p id="positive">0</p>
+        </div>
+
+        <div class="card">
+            <h3>Negative</h3>
+            <p id="negative">0</p>
+        </div>
+
+        <div class="card">
+            <h3>Neutral</h3>
+            <p id="neutral">0</p>
+        </div>
+
+    </div>
+
+
+    <!-- CHARTS -->
+    <div class="charts">
+
+        <div class="chart-box">
+            <h2>Sentiment Distribution</h2>
+            <canvas id="sentimentChart"></canvas>
+        </div>
+
+        <div class="chart-box">
+            <h2>Sentiment Trend</h2>
+            <canvas id="trendChart"></canvas>
+        </div>
+
+        <div class="chart-box">
+            <h2>Top Frequent Words</h2>
+            <canvas id="wordsChart"></canvas>
+        </div>
+
+        <div class="chart-box">
+            <h2>Category-wise Sentiment</h2>
+            <canvas id="categoryChart"></canvas>
+        </div>
+
+    </div>
+
+</div>
+
+
+<footer>
+    <p>
+        Advanced Sentiment Analysis and Trend Mining System
+    </p>
+
+    <p>
+        Python • Flask • Pandas • TextBlob • Chart.js
+    </p>
+</footer>
+
+
+<script>
+
+let sentimentChart;
+let trendChart;
+let wordsChart;
+let categoryChart;
+
+
+/* =========================
+   REVIEW ANALYSIS
+========================= */
+
+async function analyzeReview() {
+
+    const text = document.getElementById("reviewText").value.trim();
+
+    if (!text) {
+        alert("Please enter a review.");
+        return;
+    }
+
+    try {
+
+        const response = await fetch("/analyze", {
+
+            method: "POST",
+
+            headers: {
+                "Content-Type": "application/json"
+            },
+
+            body: JSON.stringify({
+                text: text
+            })
+
+        });
+
+        const data = await response.json();
+
+        if (data.error) {
+            alert(data.error);
+            return;
+        }
+
+        document.getElementById("result").style.display = "block";
+
+        document.getElementById("originalText").textContent =
+            data.original_text;
+
+        document.getElementById("cleanedText").textContent =
+            data.cleaned_text;
+
+        document.getElementById("sentiment").textContent =
+            data.sentiment;
+
+        document.getElementById("polarity").textContent =
+            data.polarity;
+
+        document.getElementById("subjectivity").textContent =
+            data.subjectivity;
+
+    }
+
+    catch (error) {
+
+        alert("Unable to analyze the review.");
+
+        console.error(error);
+
+    }
+}
+
+
+/* =========================
+   LOAD DASHBOARD
+========================= */
+
+async function loadDashboard() {
+
+    try {
+
+        const response = await fetch("/dashboard");
+
+        const data = await response.json();
+
+
+        /* CARDS */
+
+        document.getElementById("total").textContent =
+            data.total;
+
+        document.getElementById("positive").textContent =
+            data.positive;
+
+        document.getElementById("negative").textContent =
+            data.negative;
+
+        document.getElementById("neutral").textContent =
+            data.neutral;
+
+
+        /* =========================
+           SENTIMENT DOUGHNUT
+        ========================= */
+
+        const sentimentContext =
+            document.getElementById("sentimentChart");
+
+        sentimentChart = new Chart(sentimentContext, {
+
+            type: "doughnut",
+
+            data: {
+
+                labels: [
+                    "Positive",
+                    "Negative",
+                    "Neutral"
+                ],
+
+                datasets: [{
+
+                    data: [
+                        data.positive,
+                        data.negative,
+                        data.neutral
+                    ]
+
+                }]
+
+            },
+
+            options: {
+                responsive: true
+            }
+
+        });
+
+
+        /* =========================
+           TREND CHART
+        ========================= */
+
+        const trendContext =
+            document.getElementById("trendChart");
+
+        trendChart = new Chart(trendContext, {
+
+            type: "line",
+
+            data: {
+
+                labels: data.trend_dates,
+
+                datasets: [{
+
+                    label: "Average Polarity",
+
+                    data: data.trend_values,
+
+                    fill: false,
+
+                    tension: 0.3
+
+                }]
+
+            },
+
+            options: {
+
+                responsive: true,
+
+                scales: {
+
+                    y: {
+                        beginAtZero: false
+                    }
+
+                }
+
+            }
+
+        });
+
+
+        /* =========================
+           TOP WORDS
+        ========================= */
+
+        const wordLabels =
+            data.top_words.map(item => item.word);
+
+        const wordCounts =
+            data.top_words.map(item => item.count);
+
+
+        const wordsContext =
+            document.getElementById("wordsChart");
+
+        wordsChart = new Chart(wordsContext, {
+
+            type: "bar",
+
+            data: {
+
+                labels: wordLabels,
+
+                datasets: [{
+
+                    label: "Frequency",
+
+                    data: wordCounts
+
+                }]
+
+            },
+
+            options: {
+
+                responsive: true,
+
+                scales: {
+
+                    y: {
+                        beginAtZero: true
+                    }
+
+                }
+
+            }
+
+        });
+
+
+        /* =========================
+           CATEGORY ANALYSIS
+        ========================= */
+
+        const categoryLabels =
+            data.categories.map(item => item.category);
+
+        const positiveData =
+            data.categories.map(item => item.positive);
+
+        const negativeData =
+            data.categories.map(item => item.negative);
+
+        const neutralData =
+            data.categories.map(item => item.neutral);
+
+
+        const categoryContext =
+            document.getElementById("categoryChart");
+
+        categoryChart = new Chart(categoryContext, {
+
+            type: "bar",
+
+            data: {
+
+                labels: categoryLabels,
+
+                datasets: [
+
+                    {
+                        label: "Positive",
+                        data: positiveData
+                    },
+
+                    {
+                        label: "Negative",
+                        data: negativeData
+                    },
+
+                    {
+                        label: "Neutral",
+                        data: neutralData
+                    }
+
+                ]
+
+            },
+
+            options: {
+
+                responsive: true,
+
+                scales: {
+
+                    y: {
+                        beginAtZero: true
+                    }
+
+                }
+
+            }
+
+        });
+
+    }
+
+    catch (error) {
+
+        console.error(
+            "Dashboard loading error:",
+            error
+        );
+
+    }
+
+}
+
+
+/* LOAD DASHBOARD WHEN PAGE OPENS */
+
+window.onload = loadDashboard;
+
+</script>
+
+</body>
+</html>
